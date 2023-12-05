@@ -1,10 +1,13 @@
+import { numberCheck } from './utils/numberCheck'
+import { checkArgsLength } from './utils/inputLengthCheck'
+
 interface Result {
-  periodLength: number,
-  trainingDays: number,
-  success: boolean,
-  rating: number,
-  ratingDescription: string,
-  target: number,
+  periodLength: number
+  trainingDays: number
+  success: boolean
+  rating: number
+  ratingDescription: string
+  target: number
   average: number
 }
 
@@ -29,9 +32,9 @@ const average = (daily: number[]): number => {
 const rating = (avg: number, goal: number): number => {
   if (avg < goal) {
     return 1
-  } else if ( avg >= goal && avg < goal * 1.3) {
+  } else if (avg >= goal && avg < goal * 1.3) {
     return 2
-  } else if ( avg >= goal * 1.3) {
+  } else if (avg >= goal * 1.3) {
     return 3
   } else {
     throw new Error('Incorrect format')
@@ -40,17 +43,21 @@ const rating = (avg: number, goal: number): number => {
 
 const description = (rating: number): string => {
   if (rating === 1) {
-    return "You need to put in more effort"
+    return 'You need to put in more effort'
   } else if (rating === 2) {
-    return "You accomplished your goal, now keep going!"
-  } else if ( rating === 3) {
-    return "Awesome work, keep it up!"
+    return 'You accomplished your goal, now keep going!'
+  } else if (rating === 3) {
+    return 'Awesome work, keep it up!'
   } else {
     throw new Error('Wrong format')
   }
-} 
+}
 
 const calculateExercises = (daily: number[], goal: number) => {
+  
+  if (numberCheck(daily) || numberCheck(goal)) {
+    throw new Error('Please input numbers only')
+  }
   
   let dailyAverage = average(daily)
   let rate = rating(dailyAverage, goal)
@@ -68,4 +75,18 @@ const calculateExercises = (daily: number[], goal: number) => {
   return result
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+const exerciseGoal: number = Number(process.argv[2])
+const exerciseHours = process.argv.slice(3).map(Number)
+
+
+try {
+  checkArgsLength(process.argv, 5)
+  console.log(calculateExercises(exerciseHours, exerciseGoal))
+} catch (error: unknown) {
+  let errorMessage = 'Something bad happened.'
+  if (error instanceof Error) {
+    errorMessage += ' Error: ' + error.message
+  }
+  console.log(errorMessage)
+}
+//  npm run calculateExercises 2 5 3 4 0 1
