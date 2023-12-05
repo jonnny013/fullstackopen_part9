@@ -1,4 +1,12 @@
+import { checkArgsLength } from "./utils/inputLengthCheck"
+import { numberCheck } from "./utils/numberCheck"
+
 const calculateBmi = (height: number, weight: number): string => {
+
+  if (numberCheck(height) || numberCheck(weight)) {
+    throw new Error('Please input numbers only')
+  }
+
   let heightInMetres = height / 100
   let result = weight/(heightInMetres * heightInMetres)
   if (result < 18.5) {
@@ -14,5 +22,19 @@ const calculateBmi = (height: number, weight: number): string => {
   }
 }
 
+let userHeight: number = Number(process.argv[2])
+let userWeight: number = Number(process.argv[3])
 
-console.log(calculateBmi(180, 74))
+try {
+  checkArgsLength(process.argv, 4, 4)
+  console.log(calculateBmi(userHeight, userWeight))
+} catch (error: unknown) {
+  let errorMessage = 'Something bad happened.'
+  if (error instanceof Error) {
+    errorMessage += ' Error: ' + error.message
+  }
+  console.log(errorMessage)
+}
+
+
+// npm run calculateBmi 173 58

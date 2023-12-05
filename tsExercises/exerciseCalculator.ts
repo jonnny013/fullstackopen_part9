@@ -76,11 +76,11 @@ const calculateExercises = (daily: number[], goal: number) => {
 }
 
 const exerciseGoal: number = Number(process.argv[2])
-const exerciseHours = process.argv.slice(3).map(Number)
+const exerciseHours: number[] = process.argv.slice(3).map(Number)
 
 
 try {
-  checkArgsLength(process.argv, 5)
+  checkArgsLength(process.argv, 4, null)
   console.log(calculateExercises(exerciseHours, exerciseGoal))
 } catch (error: unknown) {
   let errorMessage = 'Something bad happened.'
