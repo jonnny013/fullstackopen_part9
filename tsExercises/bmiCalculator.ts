@@ -10,13 +10,13 @@ const calculateBmi = (height: number, weight: number): string => {
   let heightInMetres = height / 100
   let result = weight/(heightInMetres * heightInMetres)
   if (result < 18.5) {
-    return 'underweight'
+    return 'Underweight'
   } else if (result >= 18.5 && result < 25) {
-    return 'normal (healthy weight)'
+    return 'Normal (healthy weight)'
   } else if (result >= 25 && result < 30) {
-    return 'overweight'
+    return 'Overweight'
   } else if (result > 30) {
-    return 'obese'
+    return 'Obese'
   } else {
     throw new Error('Weight and height not given')
   }
@@ -36,5 +36,5 @@ try {
   console.log(errorMessage)
 }
 
-
+export default calculateBmi
 // npm run calculateBmi 173 58
