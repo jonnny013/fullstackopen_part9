@@ -12,7 +12,7 @@ interface Result {
 }
 
 const daysTrained = (daily: number[]): number => {
-  let daysTrained = []
+  let daysTrained: number[] = []
   for (let i = 0; i < daily.length; i++) {
     if (daily[i] !== 0) {
       daysTrained = daysTrained.concat(daily[i])

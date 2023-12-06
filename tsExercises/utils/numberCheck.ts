@@ -6,7 +6,7 @@ export const numberCheck = (args: any): boolean => {
     return isNaN(Number(args))
   }
 
-  let bool = args.map(a => isNaN(Number(a)))
+  let bool = args.map((a: any) => isNaN(Number(a)))
   for (let i = 0; i < bool.length; i++) {
     if (bool[i] === true) {
       return true
