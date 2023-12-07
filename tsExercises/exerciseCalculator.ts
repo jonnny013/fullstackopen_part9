@@ -53,7 +53,7 @@ const description = (rating: number): string => {
   }
 };
 
-const calculateExercises = (daily: number[], goal: number) => {
+export const calculateExercises = (daily: number[], goal: number) => {
   if (numberCheck(daily) || numberCheck(goal)) {
     throw new Error('Please input numbers only');
   }
@@ -67,7 +67,7 @@ const calculateExercises = (daily: number[], goal: number) => {
     trainingDays: daysTrained(daily),
     target: goal,
     average: dailyAverage,
-    success: dailyAverage > goal,
+    success: dailyAverage >= goal,
     rating: rate,
     ratingDescription: desc,
   };

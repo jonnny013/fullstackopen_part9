@@ -1,8 +1,9 @@
 export const checkArgsLength = (
-  args: string[],
+  args: string[] | number[],
   requiredLength: number,
   maxLength: number | null
 ): boolean => {
+
   try {
     if (args.length < requiredLength) throw new Error('Missing information');
 
