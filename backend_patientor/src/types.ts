@@ -4,12 +4,14 @@ export interface Diagnoses {
   latin?: string;
 }
 
+export type Gender = 'male' | 'female' | 'other';
+
 export interface Patients {
   id: string;
   name: string;
   dateOfBirth: string;
   ssn: string;
-  gender: string;
+  gender: Gender;
   occupation: string;
 }
 

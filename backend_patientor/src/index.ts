@@ -1,7 +1,7 @@
 import express from 'express';
+const app = express();
 import diagnosesRouter from './routes/diagnoses';
 import patientRouter from './routes/patients';
-const app = express();
 app.use(express.json());
 
 import cors from 'cors';
