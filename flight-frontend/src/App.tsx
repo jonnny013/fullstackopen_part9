@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Header from './components/Header'
 import DiaryDisplay from './components/Diaries'
+import AddEntry from './components/AddEntry'
 
 export interface Diaries {
   id: number,
@@ -19,13 +20,14 @@ function App() {
     })
   }, [])
 
-  console.log(diaries)
   return (
     <>
       <Header />
+      <AddEntry />
+      <br />
       <DiaryDisplay diaries={diaries} />
     </>
-  )
+  );
 }
 
 export default App
