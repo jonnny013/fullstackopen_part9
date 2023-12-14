@@ -1,6 +1,6 @@
 const Header = () => {
   return (
-    <h1>
+    <h1 style={{textAlign: "center", marginTop: 10,}}>
       Ilaris Flight Diary
     </h1>
   )

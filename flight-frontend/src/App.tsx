@@ -7,7 +7,7 @@ export interface Diaries {
   id: number,
   date: string,
   weather: string,
-  comment?: string
+  visibility: string
 }
 
 function App() {
