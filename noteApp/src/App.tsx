@@ -2,10 +2,6 @@ import {useState, useEffect} from 'react';
 import { Note } from './type';
 import { getAllNotes, createNote } from './noteService';
 
-interface Note {
-  id: number;
-  content: string;
-}
 
 const App = () => {
   const [newNote, setNewNote] = useState('');
