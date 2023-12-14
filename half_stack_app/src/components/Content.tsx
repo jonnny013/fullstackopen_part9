@@ -16,7 +16,6 @@ const Content = (props: ContentProps) => {
           <br />
           <Part item={item} />
           <br />
-          <br />
         </div>
       ))}
     </>
