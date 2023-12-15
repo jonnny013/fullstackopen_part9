@@ -30,7 +30,6 @@ const AddEntry = ({
       const data: Diaries | string = await createDiary(diary);
       if (typeof data !== 'string') {
         setDiaries(diaries.concat(data));
-        setDate('');
         setVisibility('');
         setWeather('');
         setComment('');
@@ -50,36 +49,42 @@ const AddEntry = ({
           onChange={event => setDate(event.target.value)}
         />
       </Form.Group>
-      <Form.Label>Weather</Form.Label>
-      <Form.Select
-        aria-label='Default select example'
-        onChange={event => setWeather(event.target.value)}
-        defaultValue='default'
-      >
-        <option value='default' disabled>
-          Weather
-        </option>
-        <option value='sunny'>sunny</option>
-        <option value='rainy'>rainy</option>
-        <option value='cloudy'>cloudy</option>
-        <option value='stormy'>stormy</option>
-        <option value='windy'>windy</option>
-      </Form.Select>
-      <Form.Label>Visibility</Form.Label>
-      <Form.Select
-        aria-label='Default select example'
-        onChange={event => setVisibility(event.target.value)}
-        defaultValue='default'
-      >
-        <option value='default' disabled>
-          Visibility
-        </option>
-        <option value='great'>great</option>
-        <option value='good'>good</option>
-        <option value='ok'>ok</option>
-        <option value='poor'>poor</option>
-      </Form.Select>
-
+      <Form.Group className='mb-3'>
+        <Form.Label>Weather</Form.Label>
+        <br />
+        {['sunny', 'rainy', 'cloudy', 'stormy', 'windy'].map((weatherOption, index) => (
+          <Form.Check
+            inline
+            label={weatherOption}
+            name='weatherGroup'
+            type='radio'
+            id={`weather-radio-${index}`}
+            key={`weather-radio-${index}`}
+            value={weatherOption}
+            checked={weather === weatherOption}
+            onChange={event => setWeather(event.target.value)}
+          />
+        ))}
+      </Form.Group>
+      
+      <Form.Group className='mb-3'>
+        <Form.Label>Visibility</Form.Label>
+        <br />
+        {['great', 'good', 'ok', 'poor'].map((visibilityOption, index) => (
+          <Form.Check
+            inline
+            label={visibilityOption}
+            name='visibilityGroup'
+            type='radio'
+            id={`visibility-radio-${index}`}
+            key={`visibility-radio-${index}`}
+            value={visibilityOption}
+            checked={visibility === visibilityOption}
+            onChange={event => setVisibility(event.target.value)}
+          />
+        ))}
+      </Form.Group>
+      
       <Form.Group className='mb-3' controlId='text'>
         <Form.Label>Comments</Form.Label>
         <Form.Control
