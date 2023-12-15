@@ -1,29 +1,23 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Header from './components/Header'
 import DiaryDisplay from './components/Diaries'
 import AddEntry from './components/AddEntry'
-
-export interface Diaries {
-  id: number,
-  date: string,
-  weather: string,
-  visibility: string
-}
+import { getAllDiaries } from './services/diaryServices'
+import { Diaries } from './styles'
 
 function App() {
   const [diaries, setDiaries] = useState<Diaries[]>([])
 
   useEffect(() => {
-    axios.get<Diaries[]>('http://localhost:3000/api/diaries').then(response => {
-      setDiaries(response.data)
+    getAllDiaries().then(data => {
+      setDiaries(data)
     })
   }, [])
 
   return (
     <>
       <Header />
-      <AddEntry />
+      <AddEntry diaries={diaries} setDiaries={setDiaries} />
       <br />
       <DiaryDisplay diaries={diaries} />
     </>

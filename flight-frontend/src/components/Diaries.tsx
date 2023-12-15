@@ -1,4 +1,4 @@
-import { Diaries } from "../App"
+import { Diaries } from "../styles"
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -9,7 +9,7 @@ interface DiaryDisplayProps {
 const DiaryDisplay = (props: DiaryDisplayProps) => {
 
   return (
-    <>
+    <div style={{margin: 20}}>
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -30,7 +30,7 @@ const DiaryDisplay = (props: DiaryDisplayProps) => {
           ))}
         </tbody>
       </Table>
-    </>
+    </div>
   );
 }
 
