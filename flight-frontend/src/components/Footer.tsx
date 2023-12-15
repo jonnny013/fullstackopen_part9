@@ -6,41 +6,31 @@ const Footer = () => {
     <>
       <Navbar className='bg-body-tertiary'>
         <Container>
-          <Navbar.Brand href='#home'>Brand link</Navbar.Brand>
-        </Container>
-      </Navbar>
-      <br />
-      <Navbar className='bg-body-tertiary'>
-        <Container>
-          <Navbar.Brand>Brand text</Navbar.Brand>
-        </Container>
-      </Navbar>
-      <br />
-      <Navbar className='bg-body-tertiary'>
-        <Container>
-          <Navbar.Brand href='#home'>
+          <Navbar.Brand
+            href='https://jonnny013.github.io'
+            style={{justifyContent: 'center', alignItems: 'center', display: 'flex'}}
+          >
             <img
-              src='/img/logo.svg'
-              width='30'
-              height='30'
+              alt='logo'
+              src='../../mainLogo.png'
+              width='50'
+              height='40'
               className='d-inline-block align-top'
-              alt='React Bootstrap logo'
             />
+            My Portfolio
           </Navbar.Brand>
-        </Container>
-      </Navbar>
-      <br />
-      <Navbar className='bg-body-tertiary'>
-        <Container>
-          <Navbar.Brand href='#home'>
+          <Navbar.Brand
+            href='https://github.com/jonnny013/fullstackopen_part9'
+            style={{justifyContent: 'center', alignItems: 'center', display: 'flex'}}
+          >
             <img
-              alt=''
-              src='/img/logo.svg'
-              width='30'
-              height='30'
+              alt='logo'
+              src='../../GitHub-logo.png'
+              width='50'
+              height='40'
               className='d-inline-block align-top'
-            />{' '}
-            React Bootstrap
+            />
+            Source Code
           </Navbar.Brand>
         </Container>
       </Navbar>
