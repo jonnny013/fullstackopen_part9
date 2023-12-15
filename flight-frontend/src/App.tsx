@@ -8,7 +8,7 @@ import Footer from './components/Footer'
 
 function App() {
   const [diaries, setDiaries] = useState<Diaries[]>([])
-
+  
   useEffect(() => {
     getAllDiaries().then(data => {
       setDiaries(data)

@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import {createDiary} from '../services/diaryServices';
 import {Diaries, NewDiary} from '../styles';
 import {useState} from 'react';
+import ErrorNotification from './ErrorNotification';
 
 const AddEntry = ({
   diaries,
@@ -16,8 +17,9 @@ const AddEntry = ({
   const [visibility, setVisibility] = useState('');
   const [weather, setWeather] = useState('');
   const [comment, setComment] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const onSubmit = (event: React.SyntheticEvent) => {
+  const onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     const diary: NewDiary = {
       date,
@@ -25,14 +27,17 @@ const AddEntry = ({
       weather,
       comment,
     };
-    createDiary(diary).then(data => {
-      console.log(data)
-      setDiaries(diaries.concat(data));
-    });
-    setDate('');
-    setVisibility('');
-    setWeather('');
-    setComment('');
+      const data: Diaries | string = await createDiary(diary);
+      if (typeof data !== 'string') {
+        setDiaries(diaries.concat(data));
+        setDate('');
+        setVisibility('');
+        setWeather('');
+        setComment('');
+      } else {
+        setErrorMessage(data)
+      }
+    
   };
 
   return (
@@ -87,6 +92,7 @@ const AddEntry = ({
       <Button variant='primary' type='submit'>
         Submit
       </Button>
+      <ErrorNotification errorMessage={errorMessage} setErrorMessage={setErrorMessage} />
     </Form>
   );
 };

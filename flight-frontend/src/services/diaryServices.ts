@@ -6,6 +6,16 @@ export const getAllDiaries = () => {
   return axios.get<Diaries[]>(baseUrl).then(response => response.data)
 }
 
-export const createDiary = (object: NewDiary) => {
-  return axios.post<Diaries>(baseUrl, object).then(response => response.data)
+export const createDiary = async (object: NewDiary): Promise<Diaries | string> => {
+  try{
+     const response = await axios.post<Diaries>(baseUrl, object)
+     return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data || 'An error occurred';
+    } else {
+      console.error(error);
+      return 'An error occured';
+    }
+  }
 }
