@@ -8,6 +8,7 @@ import AddPatientModal from "../AddPatientModal";
 import HealthRatingBar from "../HealthRatingBar";
 
 import patientService from "../../services/patients";
+import { Link } from "react-router-dom";
 
 interface Props {
   patients : Patient[]
@@ -48,13 +49,13 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
   };
 
   return (
-    <div className="App">
+    <div className='App'>
       <Box>
-        <Typography align="center" variant="h6">
+        <Typography align='center' variant='h6'>
           Patient list
         </Typography>
       </Box>
-      <Table style={{ marginBottom: "1em" }}>
+      <Table style={{marginBottom: '1em'}}>
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
@@ -66,7 +67,9 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
         <TableBody>
           {Object.values(patients).map((patient: Patient) => (
             <TableRow key={patient.id}>
-              <TableCell>{patient.name}</TableCell>
+              <TableCell>
+                <Link to={`patients/${patient.id}`}>{patient.name}</Link>
+              </TableCell>
               <TableCell>{patient.gender}</TableCell>
               <TableCell>{patient.occupation}</TableCell>
               <TableCell>
@@ -82,7 +85,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
         error={error}
         onClose={closeModal}
       />
-      <Button variant="contained" onClick={() => openModal()}>
+      <Button variant='contained' onClick={() => openModal()}>
         Add New Patient
       </Button>
     </div>
