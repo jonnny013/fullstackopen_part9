@@ -47,17 +47,31 @@ const parseGender = (gender: unknown): Gender => {
   return gender;
 };
 
+const parseEntries = (entries: unknown): string[] => {
+  if (!Array.isArray(entries)) {
+    throw new Error('Entries must be an array');
+  }
+  const allStrings = entries.every(entry => typeof entry === 'string');
+
+  if (!allStrings) {
+    throw new Error('Incorrect or missing entry');
+  }
+
+  return entries as string[];
+};
+
 const toNewPatientEntry = (object: unknown): NewPatientEntry => {
   if (!object || typeof object !== 'object') {
     throw new Error('Incorrect or missing data');
   }
-  if ('name' in object && 'dateOfBirth' in object && 'gender' in object && 'occupation'in object && 'ssn' in object) {
+  if ('name' in object && 'dateOfBirth' in object && 'gender' in object && 'occupation'in object && 'ssn' in object && 'entries' in object) {
     const newEntry: NewPatientEntry = {
       name: parseName(object.name),
       dateOfBirth: parseDate(object.dateOfBirth),
       gender: parseGender(object.gender),
       occupation: parseOccupation(object.occupation),
       ssn: parseSsn(object.ssn),
+      entries: parseEntries(object.entries)
     };
     return newEntry;
   }
