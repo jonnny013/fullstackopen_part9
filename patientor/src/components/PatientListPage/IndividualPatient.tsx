@@ -10,7 +10,7 @@ import TransgenderIcon from '@mui/icons-material/Transgender';
 const IndividualPatient = () => {
   const [patient, setPatient] = useState<Patient | undefined>(undefined);
   const id = useParams().id;
-
+  console.log(id);
   useEffect(() => {
     const getPatient = async () => {
       if (id) {
@@ -19,7 +19,7 @@ const IndividualPatient = () => {
       }
     };
     void getPatient();
-  }, [id]);
+  }, []);
 
   const getGenderIcon = (gender: string) => {
     switch (gender.toLowerCase()) {
@@ -37,28 +37,26 @@ const IndividualPatient = () => {
   if (!patient) {
     return (
       <Card>
-        <Skeleton animation='wave' />
-        <Skeleton animation='wave' />
-        <Skeleton animation='wave' />
+        <Skeleton animation='wave' width={350} height={70} />
+        <Skeleton animation='wave' width={300} height={35} />
+        <Skeleton animation='wave' width={300} height={35} />
       </Card>
     );
   }
 
   return (
-    <Card>
-      <CardContent>
-        <Typography variant='h2'>
-          {patient.name}
-          {getGenderIcon(patient.gender)}
-        </Typography>
-        <Typography>
-          SSN: {patient.ssn}
-        </Typography>
-        <Typography>
-          Occupation: {patient.occupation}
-        </Typography>
-      </CardContent>
-    </Card>
+    <>
+      <Card>
+        <CardContent>
+          <Typography variant='h3'>
+            {patient.name}
+            {getGenderIcon(patient.gender)}
+          </Typography>
+          <Typography>SSN: {patient.ssn}</Typography>
+          <Typography>Occupation: {patient.occupation}</Typography>
+        </CardContent>
+      </Card>
+    </>
   );
 };
 
