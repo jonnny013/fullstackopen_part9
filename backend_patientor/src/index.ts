@@ -1,6 +1,6 @@
 import express from 'express';
 const app = express();
-import diagnosesRouter from './routes/diagnoses';
+import diagnosesRouter from './routes/diagnosis';
 import patientRouter from './routes/patients';
 app.use(express.json());
 
