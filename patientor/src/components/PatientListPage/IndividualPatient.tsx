@@ -30,7 +30,8 @@ const IndividualPatient = () => {
     if (id && patient) {
       try {
         const entry = await patientService.addNewEntry(values, id);
-        setPatient(patient.entries.push(entry));
+        const updatedEntries = [...patient.entries, entry];
+        setPatient({...patient, entries: updatedEntries});
         setModalOpen(false);
       } catch (e: unknown) {
         if (axios.isAxiosError(e)) {
@@ -107,6 +108,7 @@ const IndividualPatient = () => {
             onSubmit={submitNewEntry}
             error={error}
             onClose={closeModal}
+            diagnosis={diagnosis}
           />
           <Button variant='contained' onClick={() => openModal()}>
             Add New Entry
