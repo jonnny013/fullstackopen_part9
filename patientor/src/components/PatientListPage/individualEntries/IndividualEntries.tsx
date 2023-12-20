@@ -3,6 +3,7 @@ import {Diagnosis, Entry} from '../../../types';
 import Hospital from './Hospital';
 import HealthCheck from './HealthCheck';
 import Employer from './Employer';
+import { isHospitalEntry, isHealthCheckEntry, isOccupationalHealthcareEntry } from './TypeCheck';
 
 const IndividualEntries = ({
   entry,
@@ -11,20 +12,30 @@ const IndividualEntries = ({
   entry: Entry;
   diagnosis: Diagnosis[];
 }) => {
-  const typeCheck = (type: string) => {
+   const typeCheck = (type: string, entry: Entry, diagnosis: Diagnosis[]) => {
     switch (type) {
       case 'Hospital':
-        return <Hospital entry={entry} diagnosis={diagnosis} />;
+        if (isHospitalEntry(entry)) {
+          return <Hospital entry={entry} diagnosis={diagnosis} />;
+        }
+        break;
       case 'HealthCheck':
-        return <HealthCheck entry={entry} diagnosis={diagnosis} />;
+        if (isHealthCheckEntry(entry)) {
+          return <HealthCheck entry={entry} diagnosis={diagnosis} />;
+        }
+        break;
       case 'OccupationalHealthcare':
-        return <Employer entry={entry} diagnosis={diagnosis} />;
+        if (isOccupationalHealthcareEntry(entry)) {
+          return <Employer entry={entry} diagnosis={diagnosis} />;
+        }
+        break;
     }
+    return null; // or some default component or message
   };
 
   return (
     <CardContent>
-      {typeCheck(entry.type)}
+      {typeCheck(entry.type, entry, diagnosis)}
     </CardContent>
   );
 };
