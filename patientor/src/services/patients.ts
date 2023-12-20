@@ -1,32 +1,32 @@
-import axios from "axios";
-import { Patient, PatientFormValues } from "../types";
+import axios from 'axios';
+import {EntryWithoutId, Patient, PatientFormValues, Entry} from '../types';
 
-import { apiBaseUrl } from "../constants";
+import {apiBaseUrl} from '../constants';
 
 const getAll = async () => {
-  const { data } = await axios.get<Patient[]>(
-    `${apiBaseUrl}/patients`
-  );
+  const {data} = await axios.get<Patient[]>(`${apiBaseUrl}/patients`);
 
   return data;
 };
 
 const create = async (object: PatientFormValues) => {
-  const { data } = await axios.post<Patient>(
-    `${apiBaseUrl}/patients`,
-    object
-  );
+  const {data} = await axios.post<Patient>(`${apiBaseUrl}/patients`, object);
+  return data;
+};
+
+const addNewEntry = async (object: EntryWithoutId, id: string) => {
+  const {data} = await axios.post<Entry>(`${apiBaseUrl}/patients/${id}/entries`, object);
   return data;
 };
 
 const getIndividualPatient = async (id: string) => {
-  const { data } = await axios.get<Patient>(
-    `${apiBaseUrl}/patients/${id}`
-  );
+  const {data} = await axios.get<Patient>(`${apiBaseUrl}/patients/${id}`);
   return data;
 };
 
 export default {
-  getAll, create, getIndividualPatient
+  getAll,
+  create,
+  getIndividualPatient,
+  addNewEntry,
 };
-

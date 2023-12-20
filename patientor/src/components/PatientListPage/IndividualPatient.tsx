@@ -1,19 +1,53 @@
 import {useEffect, useState} from 'react';
 import patientService from '../../services/patients';
 import diagnosisService from '../../services/diagnosis';
-import {Skeleton, CardContent, Card, Typography, Divider} from '@mui/material';
+import {Skeleton, CardContent, Card, Typography, Divider, Button} from '@mui/material';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
-import {Diagnosis, Patient} from '../../types';
+import {Diagnosis, EntryWithoutId, Patient} from '../../types';
 import {useParams} from 'react-router-dom';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 import {Entry} from '../../types';
 import IndividualEntries from './individualEntries/IndividualEntries';
+import AddEntryModal from './individualEntries/AddEntryModal';
+import axios from 'axios';
 
 const IndividualPatient = () => {
   const [patient, setPatient] = useState<Patient | undefined>(undefined);
   const [diagnosis, setDiagnosis] = useState<Diagnosis[] | undefined>(undefined);
   const id = useParams().id;
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
+
+  const submitNewEntry = async (values: EntryWithoutId) => {
+    if (id && patient) {
+      try {
+        const entry = await patientService.addNewEntry(values, id);
+        setPatient(patient.entries.push(entry));
+        setModalOpen(false);
+      } catch (e: unknown) {
+        if (axios.isAxiosError(e)) {
+          if (e?.response?.data && typeof e?.response?.data === 'string') {
+            const message = e.response.data.replace('Something went wrong. Error: ', '');
+            console.error(message);
+            setError(message);
+          } else {
+            setError('Unrecognized axios error');
+          }
+        } else {
+          console.error('Unknown error', e);
+          setError('Unknown error');
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -68,6 +102,15 @@ const IndividualPatient = () => {
           <Typography>SSN: {patient.ssn}</Typography>
           <Typography>Occupation: {patient.occupation}</Typography>
           <br />
+          <AddEntryModal
+            modalOpen={modalOpen}
+            onSubmit={submitNewEntry}
+            error={error}
+            onClose={closeModal}
+          />
+          <Button variant='contained' onClick={() => openModal()}>
+            Add New Entry
+          </Button>
           <Typography variant='h4'>Entries</Typography>
           <Card elevation={3}>
             {patient.entries &&
