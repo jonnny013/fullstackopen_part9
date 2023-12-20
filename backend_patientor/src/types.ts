@@ -48,6 +48,8 @@ export interface HealthCheckEntry extends BaseEntry {
   healthCheckRating: HealthCheckRating;
 }
 
+export type NewHealthCheckEntry = Omit<HealthCheckEntry, 'id'>;
+
 export interface Discharge {
   date: string;
   criteria: string;
@@ -57,6 +59,8 @@ export interface HospitalEntry extends BaseEntry {
   type: 'Hospital';
   discharge: Discharge;
 }
+
+export type NewHospitalEntry = Omit<HospitalEntry, 'id'>;
 
 export interface SickLeave {
   startDate: string;
@@ -68,6 +72,8 @@ export interface OccupationalHealthcareEntry extends BaseEntry {
   employerName: string;
   sickLeave?: SickLeave;
 }
+
+export type NewOccupationalHealthcareEntry = Omit<OccupationalHealthcareEntry, 'id'>;
 
 type UnionOmit<T, K extends string | number | symbol> = T extends unknown
   ? Omit<T, K>

@@ -2,9 +2,13 @@ import {
   Diagnosis,
   Discharge,
   Entry,
+  EntryWithoutId,
   HealthCheckEntry,
   HealthCheckRating,
   HospitalEntry,
+  NewHealthCheckEntry,
+  NewHospitalEntry,
+  NewOccupationalHealthcareEntry,
   OccupationalHealthcareEntry,
   SickLeave,
 } from '../types';
@@ -174,6 +178,80 @@ const parseEntries = (entries: unknown): Entry[] => {
 });
 const validEntries: Entry[] = checkedEntries.filter((entry) => entry !== undefined);
   return validEntries;
+};
+
+export const parseNewEntries = (entry: unknown): EntryWithoutId => {
+    if (!entry || typeof entry !== 'object') {
+      throw new Error('Incorrect or missing data');
+    }
+    if ('type' in entry === false) {
+      throw new Error('Incorrect or missing data');
+    }
+if (entry.type !== undefined) {
+if (entry.type === 'HealthCheck') {
+    if (
+      'description' in entry &&
+      'date' in entry &&
+      'specialist' in entry &&
+      'healthCheckRating' in entry
+    ) {
+      const newEntry: NewHealthCheckEntry = {
+        diagnosisCodes: 'diagnosisCodes' in entry
+          ? parseDiagnosis(entry.diagnosisCodes)
+          : undefined,
+        type: 'HealthCheck',
+        healthCheckRating: parseHealthCheckRating(entry.healthCheckRating),
+        description: parseDescription(entry.description),
+        date: parseDate(entry.date),
+        specialist: parseSpecialist(entry.specialist),
+      };
+      return newEntry;
+    }
+    throw new Error('Incorrect data: missing required fields.');
+  } else if (entry.type === 'Hospital') {
+    if (
+      'description' in entry &&
+      'date' in entry &&
+      'specialist' in entry &&
+      'discharge' in entry
+    ) {
+      const newEntry: NewHospitalEntry = {
+        diagnosisCodes:
+          'diagnosisCodes' in entry ? parseDiagnosis(entry.diagnosisCodes) : undefined,
+        type: 'Hospital',
+        discharge: parseDischarge(entry.discharge),
+        description: parseDescription(entry.description),
+        date: parseDate(entry.date),
+        specialist: parseSpecialist(entry.specialist),
+      };
+      return newEntry;
+    }
+    throw new Error('Incorrect data: missing required fields.');
+  } else if (entry.type === 'OccupationalHealthcare') {
+    if (
+      'description' in entry &&
+      'date' in entry &&
+      'specialist' in entry &&
+      'employerName' in entry
+    ) {
+      const newEntry: NewOccupationalHealthcareEntry = {
+        diagnosisCodes:
+          'diagnosisCodes' in entry ? parseDiagnosis(entry.diagnosisCodes) : undefined,
+        type: 'OccupationalHealthcare',
+        sickLeave: 'sickLeave' in entry ? parseSickLeave(entry.sickLeave) : undefined,
+        description: parseDescription(entry.description),
+        date: parseDate(entry.date),
+        specialist: parseSpecialist(entry.specialist),
+        employerName: parseEmployer(entry.employerName),
+      };
+      return newEntry;
+    }
+    throw new Error('Incorrect data: missing required fields.');
+  } else {
+    throw new Error('Invalid type');
+  }}
+  throw new Error('Invalid type');
+  
 };
 
 export default parseEntries;
