@@ -1,19 +1,20 @@
 import {useEffect, useState} from 'react';
 import patientService from '../../services/patients';
 import diagnosisService from '../../services/diagnosis';
-import {Skeleton, CardContent, Card, Typography} from '@mui/material';
+import {Skeleton, CardContent, Card, Typography, Divider} from '@mui/material';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
-import { Diagnosis, Patient } from '../../types';
-import { useParams } from 'react-router-dom';
+import {Diagnosis, Patient} from '../../types';
+import {useParams} from 'react-router-dom';
 import TransgenderIcon from '@mui/icons-material/Transgender';
-import { Entry } from '../../types';
+import {Entry} from '../../types';
+import IndividualEntries from './individualEntries/IndividualEntries';
 
 const IndividualPatient = () => {
   const [patient, setPatient] = useState<Patient | undefined>(undefined);
-  const [ diagnosis, setDiagnosis ] = useState<Diagnosis[] | undefined>(undefined);
+  const [diagnosis, setDiagnosis] = useState<Diagnosis[] | undefined>(undefined);
   const id = useParams().id;
- 
+
   useEffect(() => {
     const getData = async () => {
       if (id) {
@@ -39,22 +40,26 @@ const IndividualPatient = () => {
     }
   };
 
-  if (!patient) {
+  if (!patient || !diagnosis) {
     return (
-      <Card>
+      <Card elevation={3}>
         <Skeleton animation='wave' width={350} height={70} />
         <Skeleton animation='wave' width={300} height={35} />
         <Skeleton animation='wave' width={300} height={35} />
         <Skeleton animation='wave' width={150} height={70} />
-        <Skeleton animation='wave' width={300} height={35} />
-        <Skeleton animation='wave' width={300} height={35} />
+        <Card elevation={3}>
+          <Skeleton animation='wave' width={300} height={35} />
+          <Skeleton animation='wave' width={300} height={35} />
+          <Skeleton animation='wave' width={300} height={35} />
+          <Skeleton animation='wave' width={300} height={35} />
+        </Card>
       </Card>
     );
   }
 
   return (
     <>
-      <Card>
+      <Card elevation={3}>
         <CardContent>
           <Typography variant='h3'>
             {patient.name}
@@ -64,28 +69,15 @@ const IndividualPatient = () => {
           <Typography>Occupation: {patient.occupation}</Typography>
           <br />
           <Typography variant='h4'>Entries</Typography>
-          {patient.entries &&
-            patient.entries.map((entry: Entry) => (
-              <div key={entry.id}>
-                <Typography>
-                  {entry.date}: {entry.description}{' '}
-                </Typography>
-                <ul>
-                  {entry.diagnosisCodes &&
-                    entry.diagnosisCodes.map(code => {
-                      const matchingDiagnosis = diagnosis?.find(d => d.code === code);
-                      return (
-                        <li key={code}>
-                          {code}:{' '}
-                          {matchingDiagnosis
-                            ? matchingDiagnosis.name
-                            : 'Unknown Diagnosis'}
-                        </li>
-                      );
-                    })}
-                </ul>
-              </div>
-            ))}
+          <Card elevation={3}>
+            {patient.entries &&
+              patient.entries.map((entry: Entry) => (
+                <div key={entry.id}>
+                  <IndividualEntries key={entry.id} entry={entry} diagnosis={diagnosis} />
+                  <Divider variant={'middle'} />
+                </div>
+              ))}
+          </Card>
         </CardContent>
       </Card>
     </>
