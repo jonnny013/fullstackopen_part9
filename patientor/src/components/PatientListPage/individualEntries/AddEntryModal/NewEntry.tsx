@@ -13,7 +13,13 @@ import {
   Checkbox,
   ListItemText,
 } from '@mui/material';
-import {Diagnosis, Discharge, EntryWithoutId, HealthCheckRating, SickLeave} from '../../../../types';
+import {
+  Diagnosis,
+  Discharge,
+  EntryWithoutId,
+  HealthCheckRating,
+  SickLeave,
+} from '../../../../types';
 import EmployerForm from './EmployerForm';
 import HospitalForm from './HospitalForm';
 import HealthCheckForm from './HealthCheckForm';
@@ -34,8 +40,6 @@ const healthCheckRatingOptions = Object.entries(HealthCheckRating)
     label: key,
   }))
   .filter(a => isNaN(Number(a.label)) !== false);
-
-
 
 const NewEntry = ({onCancel, onSubmit, diagnosis}: Props) => {
   const [date, setDate] = useState<string | null>(null);
@@ -77,19 +81,23 @@ const NewEntry = ({onCancel, onSubmit, diagnosis}: Props) => {
 
   const addPatient = (event: SyntheticEvent) => {
     event.preventDefault();
-    onSubmit({
+    const data = {
       date,
       specialist,
       description,
       type,
       diagnosisCodes,
       employerName,
-      sickLeave,
       healthCheckRating,
       discharge,
-    });
+      ...(sickLeave.startDate !== null && sickLeave.endDate !== null ? {sickLeave} : {}),
+    };
+    onSubmit(data);
+    console.log(data);
   };
-console.log('date', date, 'type', typeof date);
+  const ok = Boolean(Date.parse(sickLeave.startDate as string));
+  console.log('date', date, 'type', typeof date);
+  console.log(ok);
   return (
     <div>
       <form
@@ -104,7 +112,7 @@ console.log('date', date, 'type', typeof date);
             labelId='type'
             label='Type'
             id='type'
-            onChange={(event) => setType(event.target.value as EntryType)}
+            onChange={event => setType(event.target.value as EntryType)}
             required
           >
             <MenuItem value='OccupationalHealthcare'>Occupational Healthcare</MenuItem>
