@@ -35,7 +35,7 @@ const HospitalForm = ({
         label='Discharge date'
         value={discharge.date}
         onChange={value =>
-          dateInput(value, date => setDischarge({...discharge, date: date}))
+          dateInput(value, date => setDischarge({...discharge, date: date as string}))
         }
       />
     </>
