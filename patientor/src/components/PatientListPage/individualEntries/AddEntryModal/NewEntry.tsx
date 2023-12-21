@@ -12,26 +12,27 @@ import {
   SelectChangeEvent,
   FormControl,
   Checkbox,
-  ListItemText
+  ListItemText,
 } from '@mui/material';
-import {Diagnosis, EntryWithoutId, HealthCheckRating} from '../../../../types';
+import {Diagnosis, Discharge, EntryWithoutId, HealthCheckRating} from '../../../../types';
+import EmployerForm from './EmployerForm';
+import HospitalForm from './HospitalForm';
+import HealthCheckForm from './HealthCheckForm';
 
-type DateSetter = React.Dispatch<React.SetStateAction<string | null>>;
+type DateSetter = React.Dispatch<React.SetStateAction<string>>;
 
 interface Props {
   onCancel: () => void;
   onSubmit: (values: EntryWithoutId) => void;
-  diagnosis: Diagnosis[]
+  diagnosis: Diagnosis[];
 }
 
-
-const healthCheckRatingOptions = Object.entries(
-  HealthCheckRating
-).map(([key, value]) => ({
+const healthCheckRatingOptions = Object.entries(HealthCheckRating)
+  .map(([key, value]) => ({
     value: value,
     label: key,
-  })).filter(a => isNaN(Number(a.label)) !== false  );
-
+  }))
+  .filter(a => isNaN(Number(a.label)) !== false);
 
 const NewEntry = ({onCancel, onSubmit, diagnosis}: Props) => {
   const [date, setDate] = useState<string | null>(null);
@@ -44,8 +45,8 @@ const NewEntry = ({onCancel, onSubmit, diagnosis}: Props) => {
     startDate: null,
     endDate: null,
   });
-  const [discharge, setDischarge] = useState({
-    date: null,
+  const [discharge, setDischarge] = useState<Discharge>({
+    date: '',
     criteria: '',
   });
   const [healthCheckRating, setHealthCheckRating] = useState(HealthCheckRating.Healthy);
@@ -58,12 +59,12 @@ const NewEntry = ({onCancel, onSubmit, diagnosis}: Props) => {
     }
   };
 
-  const dateInput = (date: Dayjs | null, setter: DateSetter) => {
+  const dateInput = (date: Dayjs | null, setter: DateSetter): void => {
     if (date) {
-      const formattedDate = date.format('YYYY-MM-DD');
+      const formattedDate: string = date.format('YYYY-MM-DD');
       setter(formattedDate);
     } else {
-      setter(''); 
+      setter('');
     }
   };
 
@@ -78,10 +79,10 @@ const NewEntry = ({onCancel, onSubmit, diagnosis}: Props) => {
       employerName,
       sickLeave,
       healthCheckRating,
-      discharge
+      discharge,
     });
   };
-
+console.log('date', date, 'type', typeof date);
   return (
     <div>
       <form
@@ -97,6 +98,7 @@ const NewEntry = ({onCancel, onSubmit, diagnosis}: Props) => {
             label='Type'
             id='type'
             onChange={({target}) => setType(target.value)}
+            required
           >
             <MenuItem value='OccupationalHealthcare'>Occupational Healthcare</MenuItem>
             <MenuItem value='Hospital'>Hospital</MenuItem>
@@ -107,30 +109,27 @@ const NewEntry = ({onCancel, onSubmit, diagnosis}: Props) => {
           label='Date'
           value={date}
           onChange={value => dateInput(value, setDate)}
+          //onChange={target => setDate(target.value)}
           maxDate={dayjs('2030-12-31')}
-          fullWidth
+          required
         />
         <TextField
           label='Specialist'
           fullWidth
           value={specialist}
           onChange={({target}) => setSpecialist(target.value)}
+          required
         />
         <TextField
           label='Description'
           fullWidth
           value={description}
           onChange={({target}) => setDescription(target.value)}
-        />
-        <TextField
-          label='Employer Name'
-          fullWidth
-          value={employerName}
-          onChange={({target}) => setEmployerName(target.value)}
+          required
         />
         <FormControl>
           <InputLabel style={{marginTop: 0}} id='diagnosesCodes'>
-            Diagnoses Codes
+            Diagnoses Codes (optional)
           </InputLabel>
           <Select
             labelId='diagnosesCodes'
@@ -150,52 +149,29 @@ const NewEntry = ({onCancel, onSubmit, diagnosis}: Props) => {
             ))}
           </Select>
         </FormControl>
-        <DatePicker
-          label='Sick Leave start date'
-          value={sickLeave.startDate}
-          onChange={value =>
-            dateInput(value, date => setSickLeave({...sickLeave, startDate: date}))
-          }
-        />
-        <DatePicker
-          label='Sick Leave end date'
-          value={sickLeave.endDate}
-          onChange={value =>
-            dateInput(value, date => setSickLeave({...sickLeave, endDate: date}))
-          }
-        />
-        <TextField
-          label='Discharge criteria'
-          fullWidth
-          value={discharge.criteria}
-          onChange={({target}) => setDischarge({...discharge, criteria: target.value})}
-        />
-        <DatePicker
-          label='Discharge date'
-          value={discharge.date}
-          onChange={value =>
-            dateInput(value, date => setDischarge({...discharge, date: date}))
-          }
-        />
-        <FormControl>
-          <InputLabel style={{marginTop: 0}} id='healthCheckRating'>
-            Health Check Rating
-          </InputLabel>
-          <Select
-            labelId='healthCheckRating'
-            id='healthCheckRating'
-            label='Health Check Rating'
-            fullWidth
-            value={healthCheckRating}
-            onChange={onHealthCheckRatingChange}
-          >
-            {healthCheckRatingOptions.map(option => (
-              <MenuItem key={option.label} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {type === 'OccupationalHealthcare' && (
+          <EmployerForm
+            employerName={employerName}
+            setEmployerName={setEmployerName}
+            sickLeave={sickLeave}
+            setSickLeave={setSickLeave}
+            dateInput={dateInput}
+          />
+        )}
+        {type === 'Hospital' && (
+          <HospitalForm
+            discharge={discharge}
+            setDischarge={setDischarge}
+            dateInput={dateInput}
+          />
+        )}
+        {type === 'HealthCheck' && (
+          <HealthCheckForm
+            healthCheckRating={healthCheckRating}
+            onHealthCheckRatingChange={onHealthCheckRatingChange}
+            healthCheckRatingOptions={healthCheckRatingOptions}
+          />
+        )}
         <Grid>
           <Grid item>
             <Button

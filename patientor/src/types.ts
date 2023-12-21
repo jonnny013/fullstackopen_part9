@@ -35,10 +35,10 @@ export interface BaseEntry {
 export type NewBaseEntry = Omit<BaseEntry, 'id'>;
 
 export enum HealthCheckRating {
-  'Healthy' = 0,
-  'Low Risk' = 1,
-  'High Risk' = 2,
-  'Critical Risk' = 3,
+  'Healthy' = 3,
+  'Low Risk' = 2,
+  'High Risk' = 1,
+  'Critical Risk' = 0,
 }
 
 export interface HealthCheckEntry extends BaseEntry {
