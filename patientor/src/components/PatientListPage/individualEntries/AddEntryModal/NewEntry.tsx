@@ -93,11 +93,8 @@ const NewEntry = ({onCancel, onSubmit, diagnosis}: Props) => {
       ...(sickLeave.startDate !== null && sickLeave.endDate !== null ? {sickLeave} : {}),
     };
     onSubmit(data);
-    console.log(data);
   };
-  const ok = Boolean(Date.parse(sickLeave.startDate as string));
-  console.log('date', date, 'type', typeof date);
-  console.log(ok);
+
   return (
     <div>
       <form

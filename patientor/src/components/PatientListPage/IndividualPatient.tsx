@@ -25,6 +25,13 @@ const IndividualPatient = () => {
     setModalOpen(false);
     setError(undefined);
   };
+  useEffect(() => {
+    const errorTimeout = setTimeout(() => {
+      setError(undefined);
+    }, 10000);
+    return () => clearTimeout(errorTimeout);
+  }, [error]);
+  console.log(error);
 
   const submitNewEntry = async (values: EntryWithoutId) => {
     if (id && patient) {

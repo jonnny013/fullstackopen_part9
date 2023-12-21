@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Table, Button, TableHead, Typography, TableCell, TableRow, TableBody } from '@mui/material';
 import axios from 'axios';
 
@@ -26,6 +26,13 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
     setModalOpen(false);
     setError(undefined);
   };
+
+  useEffect(() => {
+    const errorTimeout = setTimeout(() => {
+      setError(undefined);
+    }, 10000);
+    return () => clearTimeout(errorTimeout);
+  }, [error]);
 
   const submitNewPatient = async (values: PatientFormValues) => {
     try {

@@ -30,7 +30,7 @@ const IndividualEntries = ({
         }
         break;
     }
-    return null; // or some default component or message
+    return null;
   };
 
   return (
