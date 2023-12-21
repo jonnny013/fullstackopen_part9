@@ -24,10 +24,11 @@ export type PatientFormValues = Omit<Patient, "id" | "entries">;
 
 export type Entry = HospitalEntry | OccupationalHealthcareEntry | HealthCheckEntry;
 
+
 export interface BaseEntry {
   id: string;
   description: string;
-  date: string;
+  date: string | null;
   specialist: string;
   diagnosisCodes?: Array<Diagnosis['code']>;
 }
@@ -47,7 +48,7 @@ export interface HealthCheckEntry extends BaseEntry {
 }
 
 export interface Discharge {
-  date: string;
+  date: string | null;
   criteria: string;
 }
 
@@ -57,8 +58,8 @@ export interface HospitalEntry extends BaseEntry {
 }
 
 export interface SickLeave {
-  startDate: string;
-  endDate: string;
+  startDate: string | null;
+  endDate: string | null;
 }
 
 export interface OccupationalHealthcareEntry extends BaseEntry {

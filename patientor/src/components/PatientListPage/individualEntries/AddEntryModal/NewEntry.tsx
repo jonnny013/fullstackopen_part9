@@ -1,7 +1,6 @@
 import {useState, SyntheticEvent} from 'react';
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 import dayjs, {Dayjs} from 'dayjs';
-
 import {
   TextField,
   InputLabel,
@@ -14,12 +13,14 @@ import {
   Checkbox,
   ListItemText,
 } from '@mui/material';
-import {Diagnosis, Discharge, EntryWithoutId, HealthCheckRating} from '../../../../types';
+import {Diagnosis, Discharge, EntryWithoutId, HealthCheckRating, SickLeave} from '../../../../types';
 import EmployerForm from './EmployerForm';
 import HospitalForm from './HospitalForm';
 import HealthCheckForm from './HealthCheckForm';
 
-type DateSetter = React.Dispatch<React.SetStateAction<string>>;
+type DateSetter = React.Dispatch<React.SetStateAction<string | null>>;
+
+type EntryType = 'Hospital' | 'OccupationalHealthcare' | 'HealthCheck';
 
 interface Props {
   onCancel: () => void;
@@ -34,23 +35,27 @@ const healthCheckRatingOptions = Object.entries(HealthCheckRating)
   }))
   .filter(a => isNaN(Number(a.label)) !== false);
 
+
+
 const NewEntry = ({onCancel, onSubmit, diagnosis}: Props) => {
   const [date, setDate] = useState<string | null>(null);
   const [specialist, setSpecialist] = useState('');
   const [description, setDescription] = useState('');
-  const [type, setType] = useState('');
+  const [type, setType] = useState<EntryType>('Hospital');
   const [employerName, setEmployerName] = useState('');
   const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
-  const [sickLeave, setSickLeave] = useState({
+  const [sickLeave, setSickLeave] = useState<SickLeave>({
     startDate: null,
     endDate: null,
   });
   const [discharge, setDischarge] = useState<Discharge>({
-    date: '',
+    date: null,
     criteria: '',
   });
   const [healthCheckRating, setHealthCheckRating] = useState(HealthCheckRating.Healthy);
+
   const diagnosisCodeArray: string[] = diagnosis.map(a => a.code);
+
   const onHealthCheckRatingChange = (event: SelectChangeEvent<number>) => {
     event.preventDefault();
     const value = event.target.value;
@@ -59,10 +64,12 @@ const NewEntry = ({onCancel, onSubmit, diagnosis}: Props) => {
     }
   };
 
-  const dateInput = (date: Dayjs | null, setter: DateSetter): void => {
-    if (date) {
+  const dateInput = (date: Dayjs | null | string, setter: DateSetter): void => {
+    if (date && date instanceof dayjs) {
       const formattedDate: string = date.format('YYYY-MM-DD');
       setter(formattedDate);
+    } else if (typeof date === 'string') {
+      setter(date);
     } else {
       setter('');
     }
@@ -97,7 +104,7 @@ console.log('date', date, 'type', typeof date);
             labelId='type'
             label='Type'
             id='type'
-            onChange={({target}) => setType(target.value)}
+            onChange={(event) => setType(event.target.value as EntryType)}
             required
           >
             <MenuItem value='OccupationalHealthcare'>Occupational Healthcare</MenuItem>
@@ -108,10 +115,9 @@ console.log('date', date, 'type', typeof date);
         <DatePicker
           label='Date'
           value={date}
-          onChange={value => dateInput(value, setDate)}
+          onChange={(value: Dayjs | null | string) => dateInput(value, setDate)}
           //onChange={target => setDate(target.value)}
           maxDate={dayjs('2030-12-31')}
-          required
         />
         <TextField
           label='Specialist'
