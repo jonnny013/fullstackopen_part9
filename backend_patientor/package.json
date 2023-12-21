@@ -22,8 +22,10 @@
   },
   "dependencies": {
     "@types/cors": "^2.8.17",
+    "@types/morgan": "^1.9.9",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "morgan": "^1.10.0",
     "uuid": "^9.0.1"
   }
 }

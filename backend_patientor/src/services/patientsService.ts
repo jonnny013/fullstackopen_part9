@@ -36,6 +36,7 @@ const addPatients = (entry: NewPatientEntry): Patients => {
 };
 
 const createNewEntry = (entry: EntryWithoutId, patientId: string): Entry => {
+  console.log(entry);
   const newEntry = {
     id: uuid(),
     ...entry,

@@ -33,6 +33,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/:id/entries', (req, res) => {
+  console.log(req.body);
   try {
     const id = req.params.id;
     const newPatientEntry = parseNewEntries(req.body);
