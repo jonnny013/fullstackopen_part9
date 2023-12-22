@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:3000/api/diaries';
+const baseUrl = '/api/diaries';
 import axios from "axios";
 import { Diaries, NewDiary } from "../styles";
 
