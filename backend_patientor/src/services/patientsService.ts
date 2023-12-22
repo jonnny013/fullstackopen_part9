@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 const Patient = require('../models/patient');
-import mongoose from 'mongoose';
 import {toOldPatientEntry} from '../utils/patientUtils';
 import {v1 as uuid} from 'uuid';
 
@@ -20,7 +19,6 @@ const getPatientsPrivateInfo = async (): Promise<
         const ok = toOldPatientEntry(notOk);
         return ok;
       });
-      void mongoose.connection.close();
       return mappedResult;
     } else {
       console.log('error in get');
@@ -54,7 +52,6 @@ const getPatientsBasicInfo = async (): Promise<
         };
         return filtered;
       });
-      void mongoose.connection.close();
       return filteredResults;
     } else {
       console.log('error in get');

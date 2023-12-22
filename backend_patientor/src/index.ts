@@ -1,5 +1,6 @@
+import 'dotenv/config';
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
-const app = require('./app');
+import app from './app';
 import {PORT} from './utils/config';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call

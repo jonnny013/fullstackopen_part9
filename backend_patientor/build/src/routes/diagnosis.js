@@ -11,6 +11,6 @@ router.get('/', (_req, res) => {
     res.send(diagnosisService_1.default.getDiagnosis());
 });
 router.post('/', (_req, res) => {
-    res.send('posted!');
+    res.send('Posting not available!');
 });
 exports.default = router;

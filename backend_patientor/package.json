@@ -7,7 +7,7 @@
     "tsc": "tsc",
     "dev": "ts-node-dev ./src/index.ts",
     "lint": "eslint --ext .ts .",
-    "start": "node build/index.js",
+    "start": "node build/src/index.js",
     "build:ui": "rm -rf dist && cd ../patientor/ && npm run build && cp -r dist ../backend_patientor",
     "deploy": "fly deploy",
     "deploy:full": "npm run tsc && npm run build:ui && npm run deploy"
