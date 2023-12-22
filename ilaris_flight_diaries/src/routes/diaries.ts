@@ -15,6 +15,7 @@ router.get('/:id', (req, res) => {
 
 router.get('/', (_req, res) => {
   res.send(diaryService.getNonSensitiveEntries());
+  console.log('Get from diaries');
 });
 
 router.post('/', (req, res) => {
@@ -23,6 +24,7 @@ router.post('/', (req, res) => {
 
     const addedEntry = diaryService.addDiary(newDiaryEntry);
     res.json(addedEntry);
+    console.log("Post",addedEntry);
   } catch (error: unknown) {
     let errorMessage = 'Something went wrong.';
     if (error instanceof Error) {

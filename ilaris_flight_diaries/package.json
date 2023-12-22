@@ -8,11 +8,16 @@
     "tsc": "tsc",
     "dev": "ts-node-dev ./src/index.ts",
     "lint": "eslint --ext .ts .",
-    "start": "node build/index.js"
+    "start": "node build/src/index.js",
+    "build:ui": "rm -rf dist && cd ../flight-frontend/ && npm run build && cp -r dist ../ilaris_flight_diaries",
+    "deploy": "fly deploy",
+    "deploy:full": "npm run tsc && npm run build:ui && npm run deploy",
+    "logs:prod": "fly logs"
   },
   "author": "Jon Love",
   "license": "ISC",
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.5.0",
     "@types/express": "^4.17.21",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
     "@typescript-eslint/parser": "^6.13.2",
