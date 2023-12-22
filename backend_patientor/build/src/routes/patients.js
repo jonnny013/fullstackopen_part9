@@ -12,8 +12,11 @@ router.get('/', (_req, res) => {
     res.send(patientsService_1.default.getPatientsBasicInfo());
 });
 router.post('/', (req, res) => {
+    const entries = [];
+    const newpat = req.body;
+    const addEntryToPat = Object.assign(Object.assign({}, newpat), { entries: entries });
     try {
-        const newPatientEntry = (0, patientUtils_1.default)(req.body);
+        const newPatientEntry = (0, patientUtils_1.default)(addEntryToPat);
         const addedPatient = patientsService_1.default.addPatients(newPatientEntry);
         res.json(addedPatient);
     }

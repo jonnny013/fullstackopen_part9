@@ -1,5 +1,5 @@
-import {  Gender, NewPatientEntry } from "../types";
-import parseEntries from "./entryUtils";
+import {  Gender, NewPatientEntry, Patients } from "../types";
+import parseEntries, { parseId } from "./entryUtils";
 
 export const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -46,6 +46,34 @@ const parseGender = (gender: unknown): Gender => {
     throw new Error('Incorrect or missing gender: ' + gender);
   }
   return gender;
+};
+
+export const toOldPatientEntry = (object: unknown): Patients => {
+  if (!object || typeof object !== 'object') {
+    throw new Error('Incorrect or missing data');
+  }
+  if (
+    'name' in object &&
+    'dateOfBirth' in object &&
+    'gender' in object &&
+    'occupation' in object &&
+    'ssn' in object &&
+    'entries' in object &&
+    'id' in object
+  ) {
+    const newEntry: Patients = {
+      id: parseId(object.id),
+      name: parseName(object.name),
+      dateOfBirth: parseDate(object.dateOfBirth),
+      gender: parseGender(object.gender),
+      occupation: parseOccupation(object.occupation),
+      ssn: parseSsn(object.ssn),
+      entries: parseEntries(object.entries),
+
+    };
+    return newEntry;
+  }
+  throw new Error('Incorrect data: missing required fields.');
 };
 
 

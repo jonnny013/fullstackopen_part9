@@ -1,26 +1,43 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import express from 'express';
 import patientsService from '../services/patientsService';
 import toNewPatientEntry from '../utils/patientUtils';
 import  { parseNewEntries } from '../utils/entryUtils';
+import {Request, Response} from 'express';
 
 const router = express.Router();
 
-router.get('/', (_req, res) => {
-  res.send(patientsService.getPatientsBasicInfo());
+router.get('/', async (_req: Request, res: Response) => {
+  try {
+    const patients = await patientsService.getPatientsBasicInfo();
+    res.send(patients);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
-router.post('/', (req, res) => {
-  const entries: string[] = []
-  const newpat = req.body
-  const addEntryToPat = {...newpat, entries: entries}
+router.post('/', async (req: Request, res: Response): Promise<void> => {
+  const entries: string[] = [];
+  const newpat = req.body;
+  let addEntryToPat;
+  if ('entries' in newpat) {
+    addEntryToPat = newpat;
+  } else {
+    addEntryToPat = {...newpat, entries: entries};
+  }
+
   try {
     const newPatientEntry = toNewPatientEntry(addEntryToPat);
-    const addedPatient = patientsService.addPatients(newPatientEntry);
+    const addedPatient = await patientsService.addPatients(newPatientEntry);
     res.json(addedPatient);
+    console.log(addedPatient);
   } catch (error: unknown) {
     let errorMessage = 'Something went wrong...';
     if (error instanceof Error) {
       errorMessage += ' Error: ' + error.message;
+      console.error('Error:', error);
     }
     res.status(400).send(errorMessage);
   }

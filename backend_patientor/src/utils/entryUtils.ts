@@ -88,7 +88,7 @@ const parseEmployer = (employer: unknown): string => {
   return employer;
 };
 
-const parseId = (id: unknown): string => {
+export const parseId = (id: unknown): string => {
   if (!id || !isString(id)) {
     throw new Error('Incorrect or missing id');
   }

@@ -9,7 +9,7 @@ router.get('/', (_req, res) => {
 });
 
 router.post('/', (_req, res) => {
-  res.send('posted!');
+  res.send('Posting not available!');
 });
 
 export default router;
