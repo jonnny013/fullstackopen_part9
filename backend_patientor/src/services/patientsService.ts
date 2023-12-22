@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import patients from '../../data/patients';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 const Patient = require('../models/patient');
 import mongoose from 'mongoose';
 import  { toOldPatientEntry } from '../utils/patientUtils';
@@ -11,14 +10,13 @@ import {
   PatientsBasicInfo,
   NewPatientEntry,
   EntryWithoutId,
-  Entry,
 } from '../types';
 
-import {v1 as uuid} from 'uuid';
 
 
 const getPatientsPrivateInfo = async (): Promise<NewPatientEntry[] | string | undefined > => {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     const result: unknown = await Patient.find({});
 
     if (result && Array.isArray(result)) {
@@ -89,21 +87,23 @@ const addPatients = async (entry: NewPatientEntry): Promise<Patients> => {
   return savedPatient;
 };
 
-const createNewEntry = (entry: EntryWithoutId, patientId: string): Entry => {
+const createNewEntry = async (
+  entry: EntryWithoutId,
+  patientId: string
+): Promise<Patients | undefined> => {
   console.log(entry);
   const newEntry = {
-    id: uuid(),
     ...entry,
   };
-  const patient = patients.find(patient => patient.id === patientId);
+  const patient = await Patient.findById(patientId);
   patient?.entries.push(newEntry);
-  return newEntry;
+  return toOldPatientEntry(newEntry);
 };
 
-const findPatientById = (id: string): Patients | undefined => {
-  const patient = patients.find(p => p.id === id);
+const findPatientById = async (id: string): Promise<Patients | undefined> => {
+  const patient = await Patient.findById(id);
   console.log(patient);
-  return patient;
+  return toOldPatientEntry(patient);
 };
 
 export default {
