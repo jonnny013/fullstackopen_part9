@@ -1,8 +1,11 @@
 import { useState, SyntheticEvent } from "react";
 
 import {  TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent } from '@mui/material';
-
+import {DatePicker} from '@mui/x-date-pickers/DatePicker';
+import dayjs, {Dayjs} from 'dayjs';
 import { PatientFormValues, Gender } from "../../types";
+
+type DateSetter = React.Dispatch<React.SetStateAction<string | null>>;
 
 interface Props {
   onCancel: () => void;
@@ -22,7 +25,7 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
   const [name, setName] = useState('');
   const [occupation, setOccupation] = useState('');
   const [ssn, setSsn] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState<string | null>(null);
   const [gender, setGender] = useState(Gender.Other);
 
   const onGenderChange = (event: SelectChangeEvent<string>) => {
@@ -33,6 +36,17 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
       if (gender) {
         setGender(gender);
       }
+    }
+  };
+
+  const dateInput = (date: Dayjs | null | string, setter: DateSetter): void => {
+    if (date && date instanceof dayjs) {
+      const formattedDate: string = date.format('YYYY-MM-DD');
+      setter(formattedDate);
+    } else if (typeof date === 'string') {
+      setter(date);
+    } else {
+      setter('');
     }
   };
 
@@ -49,57 +63,52 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
 
   return (
     <div>
-      <form onSubmit={addPatient}>
+      <form
+        onSubmit={addPatient}
+        style={{display: 'flex', gap: 10, flexDirection: 'column'}}
+      >
         <TextField
-          label="Name"
-          fullWidth 
+          label='Name'
+          fullWidth
           value={name}
-          onChange={({ target }) => setName(target.value)}
+          onChange={({target}) => setName(target.value)}
         />
         <TextField
-          label="Social security number"
+          label='Social security number'
           fullWidth
           value={ssn}
-          onChange={({ target }) => setSsn(target.value)}
+          onChange={({target}) => setSsn(target.value)}
         />
-        <TextField
-          label="Date of birth"
-          placeholder="YYYY-MM-DD"
-          fullWidth
+        <DatePicker
+          label='Date of birth'
           value={dateOfBirth}
-          onChange={({ target }) => setDateOfBirth(target.value)}
-        />
-        <TextField
-          label="Occupation"
-          fullWidth
-          value={occupation}
-          onChange={({ target }) => setOccupation(target.value)}
+          onChange={(value: Dayjs | null | string) => dateInput(value, setDateOfBirth)}
+          maxDate={dayjs('2030-12-31')}
         />
 
-        <InputLabel style={{ marginTop: 20 }}>Gender</InputLabel>
-        <Select
-          label="Gender"
+        <TextField
+          label='Occupation'
           fullWidth
-          value={gender}
-          onChange={onGenderChange}
-        >
-        {genderOptions.map(option =>
-          <MenuItem
-            key={option.label}
-            value={option.value}
-          >
-            {option.label
-          }</MenuItem>
-        )}
+          value={occupation}
+          onChange={({target}) => setOccupation(target.value)}
+        />
+
+        <InputLabel style={{marginTop: 20}}>Gender</InputLabel>
+        <Select label='Gender' fullWidth value={gender} onChange={onGenderChange}>
+          {genderOptions.map(option => (
+            <MenuItem key={option.label} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
         </Select>
 
         <Grid>
           <Grid item>
             <Button
-              color="secondary"
-              variant="contained"
-              style={{ float: "left" }}
-              type="button"
+              color='secondary'
+              variant='contained'
+              style={{float: 'left'}}
+              type='button'
               onClick={onCancel}
             >
               Cancel
@@ -108,10 +117,10 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
           <Grid item>
             <Button
               style={{
-                float: "right",
+                float: 'right',
               }}
-              type="submit"
-              variant="contained"
+              type='submit'
+              variant='contained'
             >
               Add
             </Button>

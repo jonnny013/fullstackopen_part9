@@ -79,7 +79,7 @@ const NewEntry = ({onCancel, onSubmit, diagnosis}: Props) => {
     }
   };
 
-  const addPatient = (event: SyntheticEvent) => {
+  const addEntry = (event: SyntheticEvent) => {
     event.preventDefault();
     const data = {
       date,
@@ -98,7 +98,7 @@ const NewEntry = ({onCancel, onSubmit, diagnosis}: Props) => {
   return (
     <div>
       <form
-        onSubmit={addPatient}
+        onSubmit={addEntry}
         style={{display: 'flex', gap: 10, flexDirection: 'column'}}
       >
         <FormControl fullWidth>
@@ -121,7 +121,6 @@ const NewEntry = ({onCancel, onSubmit, diagnosis}: Props) => {
           label='Date'
           value={date}
           onChange={(value: Dayjs | null | string) => dateInput(value, setDate)}
-          //onChange={target => setDate(target.value)}
           maxDate={dayjs('2030-12-31')}
         />
         <TextField

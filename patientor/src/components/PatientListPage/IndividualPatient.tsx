@@ -31,14 +31,12 @@ const IndividualPatient = () => {
     }, 10000);
     return () => clearTimeout(errorTimeout);
   }, [error]);
-  console.log(error);
 
   const submitNewEntry = async (values: EntryWithoutId) => {
     if (id && patient) {
       try {
         const entry = await patientService.addNewEntry(values, id);
-        const updatedEntries = [...patient.entries, entry];
-        setPatient({...patient, entries: updatedEntries});
+        setPatient(entry);
         setModalOpen(false);
       } catch (e: unknown) {
         if (axios.isAxiosError(e)) {
@@ -67,7 +65,7 @@ const IndividualPatient = () => {
       setDiagnosis(data);
     };
     void getData();
-  }, []);
+  }, [id]);
 
   const getGenderIcon = (gender: string) => {
     switch (gender.toLowerCase()) {
