@@ -14,7 +14,7 @@ router.get('/', async (_req: Request, res: Response) => {
     res.send(patients);
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send(`${error}`);
   }
 });
 

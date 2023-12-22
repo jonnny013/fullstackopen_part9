@@ -17,50 +17,59 @@ import {
 import {v1 as uuid} from 'uuid';
 
 
-const getPatientsPrivateInfo = async (): Promise<NewPatientEntry[] | void> => {
+const getPatientsPrivateInfo = async (): Promise<NewPatientEntry[] | string | undefined > => {
   try {
     const result: unknown = await Patient.find({});
 
     if (result && Array.isArray(result)) {
       const mappedResult = result.map((notOk: unknown) => {
         const ok = toOldPatientEntry(notOk);
-
         return ok;
       });
       void mongoose.connection.close();
       return mappedResult;
-    }
+    } else {
+      console.log('error in get');
+      return "error in GET";}
   } catch (error) {
     console.log(error);
+    let message;
+    if (error instanceof Error) message = error.message;
+    else message = String(error);
+    throw new Error(message);
   }
 };
 
-const getPatientsBasicInfo = async (): Promise<void | PatientsBasicInfo[]> => {
+const getPatientsBasicInfo = async (): Promise<
+  string | undefined | PatientsBasicInfo[]
+> => {
   try {
     const result: unknown = await Patient.find({});
     console.log('result', result);
     if (result && Array.isArray(result)) {
       const filteredResults = result.map((notOk: unknown) => {
-        
         const ok: Patients = toOldPatientEntry(notOk);
-          const filtered = {
-            id: ok.id,
-            name: ok.name,
-            dateOfBirth: ok.dateOfBirth,
-            gender: ok.gender,
-            occupation: ok.occupation,
-          };
-          return filtered;
-
+        const filtered = {
+          id: ok.id,
+          name: ok.name,
+          dateOfBirth: ok.dateOfBirth,
+          gender: ok.gender,
+          occupation: ok.occupation,
+        };
+        return filtered;
       });
       void mongoose.connection.close();
       return filteredResults;
     } else {
       console.log('error in get');
+      return "error in GET";
     }
-
   } catch (error) {
-    console.log(error);
+    console.log('here', error);
+    let message;
+    if (error instanceof Error) message = error.message;
+    else message = String(error);
+    throw new Error (message);
   }
 };
 
