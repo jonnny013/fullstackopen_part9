@@ -3,18 +3,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 const Patient = require('../models/patient');
 import mongoose from 'mongoose';
-import  { toOldPatientEntry } from '../utils/patientUtils';
+import {toOldPatientEntry} from '../utils/patientUtils';
+import {v1 as uuid} from 'uuid';
 
-import {
-  Patients,
-  PatientsBasicInfo,
-  NewPatientEntry,
-  EntryWithoutId,
-} from '../types';
+import {Patients, PatientsBasicInfo, NewPatientEntry, EntryWithoutId} from '../types';
 
-
-
-const getPatientsPrivateInfo = async (): Promise<NewPatientEntry[] | string | undefined > => {
+const getPatientsPrivateInfo = async (): Promise<
+  NewPatientEntry[] | string | undefined
+> => {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     const result: unknown = await Patient.find({});
@@ -28,7 +24,8 @@ const getPatientsPrivateInfo = async (): Promise<NewPatientEntry[] | string | un
       return mappedResult;
     } else {
       console.log('error in get');
-      return "error in GET";}
+      return 'error in GET';
+    }
   } catch (error) {
     console.log(error);
     let message;
@@ -42,7 +39,8 @@ const getPatientsBasicInfo = async (): Promise<
   string | undefined | PatientsBasicInfo[]
 > => {
   try {
-    const result: unknown = await Patient.find({});
+    const result = await Patient.find({}).lean();
+
     console.log('result', result);
     if (result && Array.isArray(result)) {
       const filteredResults = result.map((notOk: unknown) => {
@@ -60,14 +58,14 @@ const getPatientsBasicInfo = async (): Promise<
       return filteredResults;
     } else {
       console.log('error in get');
-      return "error in GET";
+      return 'error in GET';
     }
   } catch (error) {
     console.log('here', error);
     let message;
     if (error instanceof Error) message = error.message;
     else message = String(error);
-    throw new Error (message);
+    throw new Error(message);
   }
 };
 
@@ -92,18 +90,40 @@ const createNewEntry = async (
   patientId: string
 ): Promise<Patients | undefined> => {
   console.log(entry);
-  const newEntry = {
+  const entryWithId = {
     ...entry,
+    id: uuid(),
   };
-  const patient = await Patient.findById(patientId);
-  patient?.entries.push(newEntry);
-  return toOldPatientEntry(newEntry);
+  try {
+    const patient = await Patient.findByIdAndUpdate(
+      patientId,
+      {$push: {entries: entryWithId}},
+      {new: true, runValidators: true}
+    );
+    console.log('patient', patient);
+
+    return toOldPatientEntry(patient);
+  } catch (error) {
+    console.log(error);
+    let message;
+    if (error instanceof Error) message = error.message;
+    else message = String(error);
+    throw new Error(message);
+  }
 };
 
 const findPatientById = async (id: string): Promise<Patients | undefined> => {
-  const patient = await Patient.findById(id);
-  console.log(patient);
-  return toOldPatientEntry(patient);
+  try {
+    const patient = await Patient.findById(id);
+    console.log(patient);
+    return toOldPatientEntry(patient);
+  } catch (error) {
+    console.log(error);
+    let message;
+    if (error instanceof Error) message = error.message;
+    else message = String(error);
+    throw new Error(message);
+  }
 };
 
 export default {
@@ -111,5 +131,5 @@ export default {
   addPatients,
   getPatientsBasicInfo,
   findPatientById,
-  createNewEntry
+  createNewEntry,
 };

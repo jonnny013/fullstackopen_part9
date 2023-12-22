@@ -3,7 +3,7 @@
 import express from 'express';
 import patientsService from '../services/patientsService';
 import toNewPatientEntry from '../utils/patientUtils';
-import  { parseNewEntries } from '../utils/entryUtils';
+import {parseNewEntries} from '../utils/entryUtils';
 import {Request, Response} from 'express';
 
 const router = express.Router();
@@ -43,21 +43,26 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-router.get('/:id', (req, res) => {
-  const patient = patientsService.findPatientById(req.params.id);
-  if (patient) {
-    res.send(patient);
-  } else {
-    res.sendStatus(404);
+router.get('/:id', async (req, res) => {
+  try {
+    const patient = await patientsService.findPatientById(req.params.id);
+    if (patient) {
+      res.send(patient);
+    } else {
+      res.sendStatus(404);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send(`${error}`);
   }
 });
 
-router.post('/:id/entries', (req, res) => {
+router.post('/:id/entries', async (req, res) => {
   console.log(req.body);
   try {
     const id = req.params.id;
     const newPatientEntry = parseNewEntries(req.body);
-    const addedEntry = patientsService.createNewEntry(newPatientEntry, id);
+    const addedEntry = await patientsService.createNewEntry(newPatientEntry, id);
     res.json(addedEntry);
   } catch (error: unknown) {
     let errorMessage = 'Something went wrong...';

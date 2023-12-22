@@ -1,5 +1,5 @@
 import {  Gender, NewPatientEntry, Patients } from "../types";
-import parseEntries, { parseId } from "./entryUtils";
+import parseEntries from "./entryUtils";
 
 export const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -48,6 +48,15 @@ const parseGender = (gender: unknown): Gender => {
   return gender;
 };
 
+ const parseId = (id: unknown): string => {
+  if (id !== null && typeof id !== 'undefined' && typeof id.toString === 'function') {
+    return (id as {toString(): string}).toString();
+  } else {
+    // Handle the case where id is null, undefined, or doesn't have a toString method
+    throw new Error('Invalid or missing id');
+  }
+};
+
 export const toOldPatientEntry = (object: unknown): Patients => {
   if (!object || typeof object !== 'object') {
     throw new Error('Incorrect or missing data');
@@ -59,10 +68,11 @@ export const toOldPatientEntry = (object: unknown): Patients => {
     'occupation' in object &&
     'ssn' in object &&
     'entries' in object &&
-    'id' in object
+    '_id' in object
   ) {
     const newEntry: Patients = {
-      id: parseId(object.id),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      id: parseId(object._id),
       name: parseName(object.name),
       dateOfBirth: parseDate(object.dateOfBirth),
       gender: parseGender(object.gender),
