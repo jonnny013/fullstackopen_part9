@@ -53,7 +53,7 @@ const toNewPatientEntry = (object: unknown): NewPatientEntry => {
   if (!object || typeof object !== 'object') {
     throw new Error('Incorrect or missing data');
   }
-  if ('name' in object && 'dateOfBirth' in object && 'gender' in object && 'occupation'in object && 'ssn' in object && 'entries' in object) {
+  if ('name' in object && 'dateOfBirth' in object && 'gender' in object && 'occupation'in object && 'ssn' in object && 'entries' in object ) {
     const newEntry: NewPatientEntry = {
       name: parseName(object.name),
       dateOfBirth: parseDate(object.dateOfBirth),
@@ -63,7 +63,7 @@ const toNewPatientEntry = (object: unknown): NewPatientEntry => {
       entries: parseEntries(object.entries)
     };
     return newEntry;
-  }
+  } 
   throw new Error('Incorrect data: missing required fields.');
 };
 

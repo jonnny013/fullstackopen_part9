@@ -10,8 +10,11 @@ router.get('/', (_req, res) => {
 });
 
 router.post('/', (req, res) => {
+  const entries: string[] = []
+  const newpat = req.body
+  const addEntryToPat = {...newpat, entries: entries}
   try {
-    const newPatientEntry = toNewPatientEntry(req.body);
+    const newPatientEntry = toNewPatientEntry(addEntryToPat);
     const addedPatient = patientsService.addPatients(newPatientEntry);
     res.json(addedPatient);
   } catch (error: unknown) {
